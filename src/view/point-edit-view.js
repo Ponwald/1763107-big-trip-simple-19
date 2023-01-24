@@ -1,6 +1,21 @@
 import { TYPES } from "../const.js";
 import AbstractView from "../framework/view/abstract-view.js";
-import { capitalize, humanizeMinutes, humanizeEditDate } from "../utils.js";
+import {
+  capitalize,
+  humanizeMinutes,
+  humanizeEditDate,
+} from "../utils/common.js";
+
+const BLANK_POINT = {
+  basePrice: "",
+  dateFrom: new Date(),
+  dateTo: new Date(),
+  destination: null,
+  id: null,
+  offers: [],
+  type: "flight",
+  allOffers: [],
+};
 const createEventTypeItemTemplate = (type, pointType) => {
   const handleCheckedClass = () => (pointType === type ? "checked" : "");
   return `<div class="event__type-item">
@@ -48,6 +63,9 @@ const createOffersTemplate = (selectedOffers, allOffers) => {
 const createTemplate = (point) => {
   const { basePrice, dateFrom, dateTo, destination, type, offers, allOffers } =
     point;
+
+  const handleResetButtonName = (price) => (price > 0 ? "Delete" : "Cancel");
+
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -69,6 +87,8 @@ const createTemplate = (point) => {
             ${capitalize(type)}
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${
+            destination?.name || ""
+          }" list="destination-list-1">
             destination.name
           }" list="destination-list-1">
           <datalist id="destination-list-1">
@@ -96,7 +116,9 @@ const createTemplate = (point) => {
           <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
         </div>
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
+        <button class="event__reset-btn" type="reset">${handleResetButtonName(
+          basePrice
+        )}</button>
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>
@@ -123,7 +145,11 @@ export default class PointEditView extends AbstractView {
   #point = null;
   #handleSubmitForm = null;
   #handleRollupButtonClick = null;
-  constructor({ point, handleSubmitForm, handleRollupButtonClick }) {
+  constructor({
+    point = BLANK_POINT,
+    handleSubmitForm,
+    handleRollupButtonClick = {},
+  }) {
     super();
     this.point = point;
     this.#handleSubmitForm = handleSubmitForm;

@@ -1,5 +1,5 @@
-import { render, RenderPosition } from "../framework/render.js";
-import { getOffersByPointType } from "../utils.js";
+import { render, RenderPosition, replace } from "../framework/render.js";
+import { getOffersByPointType } from "../utils/common.js";
 import SortView from "../view/sort-view.js";
 import TripEventsListView from "../view/trip-events-list-view.js";
 import ListEmptyView from "../view/list-empty-view.js";
@@ -80,11 +80,13 @@ export default class BoardPresenter {
         document.removeEventListener("keydown", escKeydownHandler);
       },
     });
+
+    function replacePointToForm() {
+      replace(newEditPoint, newPoint);
+    }
+
     function replaceFormToPoint() {
-      this.#tripEventsList.element.replaceChild(
-        newPoint.element,
-        newEditPoint.element
-      );
+      replace(newPoint, newEditPoint);
     }
 
     render(newPoint, this.#tripEventsList.element);
