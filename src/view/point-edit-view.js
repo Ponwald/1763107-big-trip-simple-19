@@ -1,5 +1,5 @@
 import { TYPES } from "../const.js";
-import { createElement } from "../render.js";
+import AbstractView from "../framework/view/abstract-view.js";
 import { capitalize, humanizeMinutes, humanizeEditDate } from "../utils.js";
 const createEventTypeItemTemplate = (type, pointType) => {
   const handleCheckedClass = () => (pointType === type ? "checked" : "");
@@ -119,24 +119,33 @@ const createTemplate = (point) => {
   </li>`;
 };
 
-export default class PointEditView {
-  #element = null;
+export default class PointEditView extends AbstractView {
   #point = null;
-  constructor({ point }) {
+  #handleSubmitForm = null;
+  #handleRollupButtonClick = null;
+  constructor({ point, handleSubmitForm, handleRollupButtonClick }) {
+    super();
     this.point = point;
+    this.#handleSubmitForm = handleSubmitForm;
+    this.#handleRollupButtonClick = handleRollupButtonClick;
+
+    this.element
+      .querySelector("form")
+      .addEventListener("submit", this.#submitFormHandler);
+    this.element
+      .querySelector(".event__rollup-btn")
+      .addEventListener("click", this.#rollupButtonClickHandler);
   }
 
-  get tempolate() {
+  get template() {
     return createTemplate(this.#point);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-  removeElement() {
-    this.#element = null;
-  }
+  #submitFormHandler = () => {
+    evt.preventDefault();
+    this.#handleSubmitForm();
+  };
+  #rollupButtonClickHandler = () => {
+    this.#handleRollupButtonClick();
+  };
 }
