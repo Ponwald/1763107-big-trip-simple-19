@@ -20,5 +20,5 @@ const boardPresenter = new BoardPresenter({
   destinationsModel,
   offersModel,
 });
-render(new FilterView(), siteFiltersContainerElement);
+render(new FilterView(pointsModel.points), siteFiltersContainerElement);
 boardPresenter.init();

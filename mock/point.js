@@ -2,8 +2,8 @@ import {
   getMultipleRandomArrayElements,
   getRandomArrayElement,
   getRandomInteger,
-} from "./unils.js";
-import { getOffersPointType } from "../src/common";
+} from "./utils.js";
+import { getOffersPointType } from "../utils/common.js";
 import { MAX_OFFERS, PointsAmount } from "./const.js";
 import { TYPEPOINT } from "../src/const.js";
 import { offersByType } from "./offer.js";
