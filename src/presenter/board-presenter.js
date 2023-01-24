@@ -1,4 +1,4 @@
-import { render, RenderPosition } from "../render.js";
+import { render, RenderPosition } from "../framework/render.js";
 import { getOffersByPointType } from "../utils.js";
 import SortView from "../view/sort-view.js";
 import TripEventsListView from "../view/trip-events-list-view.js";
@@ -44,6 +44,14 @@ export default class BoardPresenter {
     }
   }
   #renderPoint(point) {
+    const escKeydownHandler = (evt) => {
+      if (evt.key === "Escape" || evt.key === "Esc") {
+        evt.preventDefault();
+        replaceFormToPoint.call(this);
+        document.removeEventListener("keydown", escKeydownHandler);
+      }
+    };
+
     const pointData = {
       point: {
         ...point,
@@ -53,49 +61,31 @@ export default class BoardPresenter {
         allOffers: getOffersByPointType(point.type, this.#offers),
       },
     };
-    const newPoint = new PointView(pointData);
-    const newEditPoint = new PointEditView(pointData);
 
-    const replacePointToForm = () =>
-      this.#tripEventsList.element.replaceChild(
-        newEditPoint.element,
-        newPoint.element
-      );
+    const newPoint = new PointView({
+      ...pointData,
+      handleExpandButtonClick: () => {
+        replacePointToForm.call(this);
+        document.addEventListener("keydown", escKeydownHandler);
+      },
+    });
 
-    const replaceFormToPoint = () =>
+    const newEditPoint = new PointEditView({
+      ...pointData,
+      handleSubmitForm: () => {
+        replaceFormToPoint.call(this);
+      },
+      handleRollupButtonClick: () => {
+        replaceFormToPoint.call(this);
+        document.removeEventListener("keydown", escKeydownHandler);
+      },
+    });
+    function replaceFormToPoint() {
       this.#tripEventsList.element.replaceChild(
         newPoint.element,
         newEditPoint.element
       );
-
-    const escKeydownHandler = (evt) => {
-      if (evt.key === "Escape" || evt.key === "Esc") {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener("keydown", escKeydownHandler);
-      }
-    };
-
-    newPoint.element
-      .querySelector(".event__rollup-btn")
-      .addEventListener("click", () => {
-        replacePointToForm();
-        document.addEventListener("keydown", escKeydownHandler);
-      });
-
-    newEditPoint.element
-      .querySelector("form")
-      .addEventListener("submit", (evt) => {
-        evt.preventDefault();
-        replaceFormToPoint();
-      });
-
-    newEditPoint.element
-      .querySelector(".event__rollup-btn")
-      .addEventListener("click", () => {
-        replaceFormToPoint();
-        document.removeEventListener("keydown", escKeydownHandler);
-      });
+    }
 
     render(newPoint, this.#tripEventsList.element);
   }
