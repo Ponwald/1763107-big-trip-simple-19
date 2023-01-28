@@ -5,13 +5,16 @@ import SortView from "../view/sort-view.js";
 import TripEventsListView from "../view/trip-events-list-view.js";
 import ListEmptyView from "../view/list-empty-view.js";
 import PointPresenter from "./point-presenter.js";
+import { SortType } from "../const.js";
 
 export default class BoardPresenter {
+  #currentSort = SortType.DAY;
   #boardContainer = null;
   #pointsModel = null;
   #destinationsModel = null;
   #offersModel = null;
   #points = [];
+  #sourcedPoints = [];
   #destinations = [];
   #offers = [];
   #tripEventsList = new TripEventsListView();
@@ -24,7 +27,8 @@ export default class BoardPresenter {
   }
 
   init() {
-    this.#points = [...this.#pointsModel.points];
+    this.#points = [...this.#pointsModel.points].sort(sortByDay);
+    this.#sourcedPoints = [...this.#pointsModel.points].sort(sortByDay);
     this.#destinations = [...this.#destinationsModel.destinations];
     this.#offers = [...this.#offersModel.offers];
     this.#renderBoard();
@@ -66,7 +70,9 @@ export default class BoardPresenter {
   }
   #renderSort() {
     render(
-      new SortView(),
+      new SortView({
+        onSortChange: this.#handleSortChange,
+      }),
       this.#boardContainer.firstElementChild,
       RenderPosition.AFTEREND
     );
@@ -85,12 +91,34 @@ export default class BoardPresenter {
     this.#pointPresenters.clear();
   }
 
+  #sortPoints(sortType) {
+    switch (sortType) {
+      case SortType.DAY:
+        this.#points = [...this.#sourcedPoints];
+        break;
+      case SortType.PRICE:
+        this.#points.sort(sortByPrice);
+    }
+
+    this.#currentSort = sortType;
+  }
+
   #handlePointChange = (updatedPoint) => {
     this.#points = updateItem(this.#points, updatedPoint);
+    this.#sourcedPoints = updateItem(this.#sourcedPoints, updatedPoint);
     this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   };
 
   #handleModeChange = () => {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
+  #handleSortChange = (sortType) => {
+    if (this.#currentSort === sortType) {
+      return;
+    }
+
+    this.#sortPoints(sortType);
+    this.#clearPointsList();
+    this.#renderPointsList();
   };
 }
