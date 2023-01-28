@@ -1,20 +1,21 @@
-import { render, RenderPosition, replace } from "../framework/render.js";
-import { getOffersByPointType } from "../utils/common.js";
+import { render, RenderPosition } from "../framework/render.js";
+import { getOffersByPointType, updateItem } from "../utils/common.js";
+import { sortByDay, sortByPrice } from "../utils/point.js";
 import SortView from "../view/sort-view.js";
 import TripEventsListView from "../view/trip-events-list-view.js";
 import ListEmptyView from "../view/list-empty-view.js";
-import PointEditView from "../view/point-edit-view.js";
-import PointView from "../view/point-view.js";
+import PointPresenter from "./point-presenter.js";
 
 export default class BoardPresenter {
-  #destinationsModel = null;
   #boardContainer = null;
   #pointsModel = null;
+  #destinationsModel = null;
   #offersModel = null;
   #points = [];
   #destinations = [];
   #offers = [];
   #tripEventsList = new TripEventsListView();
+  #pointPresenters = new Map();
   constructor({ boardContainer, pointsModel, destinationsModel, offersModel }) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
@@ -26,32 +27,10 @@ export default class BoardPresenter {
     this.#points = [...this.#pointsModel.points];
     this.#destinations = [...this.#destinationsModel.destinations];
     this.#offers = [...this.#offersModel.offers];
-
-    if (this.#points.length < 1) {
-      render(new ListEmptyView(), this.#boardContainer);
-      return;
-    }
-
-    render(
-      new SortView(),
-      this.#boardContainer.firstElementChild,
-      RenderPosition.AFTEREND
-    );
-    render(this.#tripEventsList, this.#boardContainer);
-
-    for (let i = 0; i < this.#points.length; i++) {
-      this.#renderPoint(this.#points[i]);
-    }
+    this.#renderBoard();
   }
-  #renderPoint(point) {
-    const escKeydownHandler = (evt) => {
-      if (evt.key === "Escape" || evt.key === "Esc") {
-        evt.preventDefault();
-        replaceFormToPoint.call(this);
-        document.removeEventListener("keydown", escKeydownHandler);
-      }
-    };
 
+  #renderPoint(point) {
     const pointData = {
       point: {
         ...point,
@@ -62,33 +41,56 @@ export default class BoardPresenter {
       },
     };
 
-    const newPoint = new PointView({
-      ...pointData,
-      handleExpandButtonClick: () => {
-        replacePointToForm.call(this);
-        document.addEventListener("keydown", escKeydownHandler);
-      },
+    const pointPresenter = new PointPresenter({
+      pointsListContainer: this.#tripEventsList.element,
+      onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange,
     });
 
-    const newEditPoint = new PointEditView({
-      ...pointData,
-      handleSubmitForm: () => {
-        replaceFormToPoint.call(this);
-      },
-      handleRollupButtonClick: () => {
-        replaceFormToPoint.call(this);
-        document.removeEventListener("keydown", escKeydownHandler);
-      },
-    });
-
-    function replacePointToForm() {
-      replace(newEditPoint, newPoint);
-    }
-
-    function replaceFormToPoint() {
-      replace(newPoint, newEditPoint);
-    }
-
-    render(newPoint, this.#tripEventsList.element);
+    pointPresenter.init(pointData);
+    this.#pointPresenters.set(pointData.id, pointPresenter);
   }
+
+  #renderBoard() {
+    if (this.#points.length < 1) {
+      this.#renderNoPoints();
+      return;
+    }
+
+    this.#renderSort();
+    this.#renderPointsList();
+  }
+
+  #renderNoPoints() {
+    render(new ListEmptyView(), this.#boardContainer);
+  }
+  #renderSort() {
+    render(
+      new SortView(),
+      this.#boardContainer.firstElementChild,
+      RenderPosition.AFTEREND
+    );
+  }
+
+  #renderPointsList() {
+    render(this.#tripEventsList, this.#boardContainer);
+
+    for (let i = 0; i < this.#points.length; i++) {
+      this.#renderPoint(this.#points[i]);
+    }
+  }
+
+  #clearPointsList() {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
+  }
+
+  #handlePointChange = (updatedPoint) => {
+    this.#points = updateItem(this.#points, updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
+
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
 }
