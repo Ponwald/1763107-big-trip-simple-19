@@ -15,7 +15,6 @@ export default class PointPresenter {
   #newPoint = null;
   #newEditPoint = null;
   #mode = Mode.DEFAULT;
-  #getDestinationById = null;
   #allDestinations = [];
   #getOffersByPointType = null;
 
@@ -23,7 +22,6 @@ export default class PointPresenter {
     pointsListContainer,
     onDataChange,
     onModeChange,
-    getDestinationById,
     allDestinations,
     getOffersByPointType,
   }) {
@@ -87,24 +85,24 @@ export default class PointPresenter {
   #replacePointToForm() {
     replace(this.#newEditPoint, this.#newPoint);
     this.#mode = Mode.EDITING;
-
+    this.#newEditPoint.setDatepickers();
     document.addEventListener("keydown", this.#escKeydownHandler);
   }
 
   #replaceFormToPoint() {
     replace(this.#newPoint, this.#newEditPoint);
     this.#mode = Mode.DEFAULT;
-
+    this.#newEditPoint.destroyDatepickers();
     document.removeEventListener("keydown", this.#escKeydownHandler);
   }
 
-  #resetEditFormState() {
+  #resetEditFormView() {
     this.#newEditPoint.resetState(this.#point);
   }
 
   #handleCloseForm = () => {
     this.#replaceFormToPoint();
-    this.#resetEditFormState();
+    this.#resetEditFormView();
   };
 
   #handleSubmitForm = (point) => {
