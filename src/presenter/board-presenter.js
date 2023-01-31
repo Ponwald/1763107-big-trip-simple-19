@@ -1,4 +1,4 @@
-import { render, RenderPosition } from "../framework/render.js";
+import { render, RenderPosition } from "../../framework/render.js";
 import { getOffersByPointType, updateItem } from "../utils/common.js";
 import { sortByDay, sortByPrice } from "../utils/point.js";
 import SortView from "../view/sort-view.js";
@@ -35,24 +35,16 @@ export default class BoardPresenter {
   }
 
   #renderPoint(point) {
-    const pointData = {
-      point: {
-        ...point,
-        destination: this.#destinations.find(
-          (item) => item.id === point.destination
-        ),
-        allOffers: getOffersByPointType(point.type, this.#offers),
-      },
-    };
-
     const pointPresenter = new PointPresenter({
       pointsListContainer: this.#tripEventsList.element,
       onDataChange: this.#handlePointChange,
       onModeChange: this.#handleModeChange,
+      allDestinations: this.#getDestinationsList(),
+      getOffersByPointType: this.#getOffersByPointType,
     });
 
-    pointPresenter.init(pointData);
-    this.#pointPresenters.set(pointData.id, pointPresenter);
+    pointPresenter.init(point);
+    this.#pointPresenters.set(point.id, pointPresenter);
   }
 
   #renderBoard() {
@@ -102,6 +94,11 @@ export default class BoardPresenter {
 
     this.#currentSort = sortType;
   }
+
+  #getDestinationsList = () => this.#destinations;
+
+  #getOffersByPointType = (pointType) =>
+    getOffersByPointType(pointType, this.#offers);
 
   #handlePointChange = (updatedPoint) => {
     this.#points = updateItem(this.#points, updatedPoint);

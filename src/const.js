@@ -1,4 +1,4 @@
-const TYPEPOINT = [
+const TYPES = [
   "taxi",
   "bus",
   "train",
@@ -20,4 +20,4 @@ const SortType = {
   PRICE: "price",
 };
 
-export { TYPEPOINT, FilterType, SortType };
+export { TYPES, FilterType, SortType };

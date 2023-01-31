@@ -2,12 +2,12 @@ import {
   getMultipleRandomArrayElements,
   getRandomArrayElement,
   getRandomInteger,
-} from "./unils.js";
+} from "./utils.js";
 import { MAX_PICTURES, descriptions, cities } from "./const.js";
 
 const generatePicture = () => ({
-  src: `https://placekitten.com/640/360?random=${getRandomInteger(100, 500)}`,
-  descriptions: getRandomArrayElement(descriptions),
+  src: `https://loremflickr.com/248/152?random=${getRandomInteger(100, 500)}`,
+  description: getRandomArrayElement(descriptions),
 });
 
 const generateDescription = () =>
@@ -18,15 +18,16 @@ const generatePictures = () =>
 
 const generateDestination = (name, id) => ({
   id,
-  descriptions: generateDescription(),
+  description: generateDescription(),
   name,
   pictures: generatePictures(),
 });
 
-const destination = [];
+const destinations = [];
+
 cities
   .slice()
   .sort(() => 0.5 - Math.random())
   .forEach((city, id) => destinations.push(generateDestination(city, id)));
 
-export { destination };
+export { destinations };
