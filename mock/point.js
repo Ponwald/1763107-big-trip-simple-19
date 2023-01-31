@@ -3,11 +3,11 @@ import {
   getRandomArrayElement,
   getRandomInteger,
 } from "./utils.js";
-import { getOffersPointType } from "../utils/common.js";
+import { getOffersByPointType } from "../src/utils/common.js";
 import { MAX_OFFERS, PointsAmount } from "./const.js";
-import { TYPEPOINT } from "../src/const.js";
+import { TYPES } from "../src/const.js";
 import { offersByType } from "./offer.js";
-import { destination } from "./destination.js";
+import { destinations } from "./destination.js";
 //взято для генирации id из - https://github.com/ai/nanoid/blob/HEAD/README.ru.md
 import { nanoid } from "nanoid";
 
@@ -16,16 +16,16 @@ const generatePoint = () => {
   const hour = getRandomInteger(0, 23);
   const minute = getRandomInteger(0, 60);
 
-  const pointType = getRandomArrayElement(TYPEPOINT);
+  const pointType = getRandomArrayElement(TYPES);
 
-  const pointTypeOffers = getOffersPointType(pointType, offersByType);
+  const pointTypeOffers = getOffersByPointType(pointType, offersByType);
 
   const getOffersIds = () =>
     getMultipleRandomArrayElements(pointTypeOffers, 0, MAX_OFFERS).map(
       (item) => item.id
     );
 
-  const getDestinationId = () => getRandomArrayElement(destination).id;
+  const getDestinationId = () => getRandomArrayElement(destinations).id;
 
   return {
     basePrice: getRandomInteger(100, 1500),

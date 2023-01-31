@@ -1,7 +1,8 @@
-import AbstractView from "../framework/view/abstract-view.js";
+import AbstractView from "../../framework/view/abstract-view.js";
+import { filteredPointsByDay } from "../utils/filter.js";
 const createTemplate = (points) => {
   const handleDisabledClass = () =>
-    filter(points).length > 0 ? "" : "disabled";
+    filteredPointsByDay(points).length > 0 ? "" : "disabled";
 
   return `<form class="trip-filters" action="#" method="get">
     <div class="trip-filters__filter">

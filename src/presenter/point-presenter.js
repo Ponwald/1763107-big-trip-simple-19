@@ -1,4 +1,4 @@
-import { remove, render, replace } from "../framework/render.js";
+import { remove, render, replace } from "../../framework/render.js";
 import PointEditView from "../view/point-edit-view.js";
 import PointView from "../view/point-view.js";
 
@@ -15,11 +15,24 @@ export default class PointPresenter {
   #newPoint = null;
   #newEditPoint = null;
   #mode = Mode.DEFAULT;
+  #getDestinationById = null;
+  #allDestinations = [];
+  #getOffersByPointType = null;
 
-  constructor({ pointsListContainer, onDataChange, onModeChange }) {
+  constructor({
+    pointsListContainer,
+    onDataChange,
+    onModeChange,
+    getDestinationById,
+    allDestinations,
+    getOffersByPointType,
+  }) {
     this.#pointsListContainer = pointsListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
+    this.#getDestinationById = getDestinationById;
+    this.#allDestinations = allDestinations;
+    this.#getOffersByPointType = getOffersByPointType;
   }
 
   init(point) {
@@ -31,12 +44,16 @@ export default class PointPresenter {
     this.#newPoint = new PointView({
       point: this.#point,
       handleExpandButtonClick: this.#handleOpenForm,
+      allDestinations: this.#allDestinations,
+      getOffersByPointType: this.#getOffersByPointType,
     });
 
     this.#newEditPoint = new PointEditView({
       point: this.#point,
       handleSubmitForm: this.#handleSubmitForm,
       handleRollupButtonClick: this.#handleCloseForm,
+      allDestinations: this.#allDestinations,
+      getOffersByPointType: this.#getOffersByPointType,
     });
 
     if (prevPoint === null || prevEditPoint === null) {
@@ -81,8 +98,13 @@ export default class PointPresenter {
     document.removeEventListener("keydown", this.#escKeydownHandler);
   }
 
+  #resetEditFormState() {
+    this.#newEditPoint.resetState(this.#point);
+  }
+
   #handleCloseForm = () => {
     this.#replaceFormToPoint();
+    this.#resetEditFormState();
   };
 
   #handleSubmitForm = (point) => {
