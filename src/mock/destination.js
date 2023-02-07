@@ -1,13 +1,9 @@
-import {
-  getMultipleRandomArrayElements,
-  getRandomArrayElement,
-  getRandomInteger,
-} from "./utils.js";
+import { getMultipleRandomArrayElements, getRandomInteger } from "./utils.js";
 import { MAX_PICTURES, descriptions, cities } from "./const.js";
 
 const generatePicture = () => ({
   src: `https://loremflickr.com/248/152?random=${getRandomInteger(100, 500)}`,
-  description: getRandomArrayElement(descriptions),
+  description: "Picture nice description",
 });
 
 const generateDescription = () =>

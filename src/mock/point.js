@@ -3,12 +3,11 @@ import {
   getRandomArrayElement,
   getRandomInteger,
 } from "./utils.js";
-import { getOffersByPointType } from "../src/utils/common.js";
+import { getOffersByPointType } from "../utils/point.js";
 import { MAX_OFFERS, PointsAmount } from "./const.js";
-import { TYPES } from "../src/const.js";
+import { TYPES } from "../const.js";
 import { offersByType } from "./offer.js";
 import { destinations } from "./destination.js";
-//взято для генирации id из - https://github.com/ai/nanoid/blob/HEAD/README.ru.md
 import { nanoid } from "nanoid";
 
 const generatePoint = () => {
@@ -29,12 +28,12 @@ const generatePoint = () => {
 
   return {
     basePrice: getRandomInteger(100, 1500),
-    datefrom: new Date(2023, 0, day, hour, minute),
+    dateFrom: new Date(2023, getRandomInteger(0, 1), day, hour, minute),
     dateTo: new Date(
       2023,
-      getRandomInteger(0, 1),
+      getRandomInteger(1, 2),
       day + getRandomInteger(0, 1),
-      hour + getRandomInteger(0, 12, minute + getRandomInteger(0.3))
+      hour + getRandomInteger(0, 12, minute + getRandomInteger(0, 30))
     ),
     destination: getDestinationId(),
     id: nanoid(),

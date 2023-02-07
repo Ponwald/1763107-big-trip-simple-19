@@ -1,5 +1,4 @@
-//Самая удачная идея, взята  за основу https://github.com/htmlacademy-ecmascript/2049181-big-trip-simple-19/blob/master/src/mock/utils.js
-
+// взято  - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
