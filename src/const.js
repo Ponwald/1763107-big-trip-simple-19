@@ -13,6 +13,7 @@ const TYPES = [
 const FilterType = {
   EVERYTHING: "everything",
   FUTURE: "future",
+  INIT: "INIT",
 };
 
 const SortType = {
