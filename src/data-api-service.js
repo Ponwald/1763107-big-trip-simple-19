@@ -1,16 +1,16 @@
-import ApiService from "../framework/api-service.js";
+import ApiService from '../framework/api-service.js';
 
 const Method = {
-  GET: "GET",
-  PUT: "PUT",
-  POST: "POST",
-  DELETE: "DELETE",
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
 };
 
 const Url = {
-  POINTS: "points",
-  OFFERS: "offers",
-  DESTINATIONS: "destinations",
+  POINTS: 'points',
+  OFFERS: 'offers',
+  DESTINATIONS: 'destinations',
 };
 
 export default class DataApiService extends ApiService {
@@ -31,7 +31,7 @@ export default class DataApiService extends ApiService {
       url: `${Url.POINTS}/${point.id}`,
       method: Method.PUT,
       body: JSON.stringify(this.#adaptToServer(point)),
-      headers: new Headers({ "Content-Type": "application/json" }),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
     });
     const parseResponse = await ApiService.parseResponse(response);
 
@@ -43,7 +43,7 @@ export default class DataApiService extends ApiService {
       url: Url.POINTS,
       method: Method.POST,
       body: JSON.stringify(this.#adaptToServer(point)),
-      headers: new Headers({ "Content-Type": "application/json" }),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
     });
     const parsedResponse = await ApiService.parseResponse(response);
 
@@ -62,9 +62,9 @@ export default class DataApiService extends ApiService {
   #adaptToServer(point) {
     const adaptedPoint = {
       ...point,
-      base_price: point.basePrice,
-      date_from: point.dateFrom.toISOString(),
-      date_to: point.dateTo.toISOString(),
+      basePrice: point.basePrice,
+      dateFrom: point.dateFrom.toISOString(),
+      dateTo: point.dateTo.toISOString(),
     };
 
     delete adaptedPoint.basePrice;

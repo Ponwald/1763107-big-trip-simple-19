@@ -1,5 +1,5 @@
-import Observable from "../../framework/observable.js";
-import { UpdateType } from "../const.js";
+import Observable from '../../framework/observable.js';
+import { UpdateType } from '../const.js';
 
 export default class DataModel extends Observable {
   #dataApiService = null;
@@ -45,7 +45,7 @@ export default class DataModel extends Observable {
     const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
-      throw new Error("Can't update unexisting point");
+      throw new Error('Can\'t update unexisting point');
     }
 
     try {
@@ -59,7 +59,7 @@ export default class DataModel extends Observable {
       ];
       this._notify(updateType, updatedPoint);
     } catch (err) {
-      throw new Error("Can't update point");
+      throw new Error('Can\'t update point');
     }
   }
 
@@ -71,14 +71,15 @@ export default class DataModel extends Observable {
       this.#points = [newPoint, ...this.#points];
       this._notify(updateType, newPoint);
     } catch (err) {
-      throw new Error("Can't add point");
+      throw new Error('Can\'t add point');
     }
   }
+
   async deletePoint(updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
-      throw new Error("Can't delete unexisting point");
+      throw new Error('Can\'t delete unexisting point');
     }
 
     try {
@@ -91,9 +92,10 @@ export default class DataModel extends Observable {
 
       this._notify(updateType);
     } catch (err) {
-      throw new Error("Can't delete point");
+      throw new Error('Can\'t delete point');
     }
   }
+
   #adaptToClient(point) {
     const adaptedPoint = {
       ...point,
@@ -102,9 +104,9 @@ export default class DataModel extends Observable {
       dateTo: new Date(point.date_to),
     };
 
-    delete adaptedPoint["base_price"];
-    delete adaptedPoint["date_from"];
-    delete adaptedPoint["date_to"];
+    delete adaptedPoint['base_price'];
+    delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
 
     return adaptedPoint;
   }
