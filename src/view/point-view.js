@@ -1,10 +1,10 @@
-import AbstractView from "../../framework/view/abstract-view.js";
+import AbstractView from '../../framework/view/abstract-view.js';
 import {
   capitalize,
   humanizeDate,
   humanizeMinutes,
   humanizeTopicDate,
-} from "../utils/point.js";
+} from '../utils/point.js';
 
 const NO_OFFERS_TEMPLATE = `<li class="event__offer">
 <span class="event__offer-title">No additional offers</span>
@@ -29,7 +29,7 @@ const createOffersTemplate = (allOffers, selectedOffers) => {
       }
     });
 
-    offersTemplate = resultOffers.join("\r\n");
+    offersTemplate = resultOffers.join('\r\n');
   }
 
   return offersTemplate;
@@ -49,8 +49,8 @@ const createTemplate = (point) => {
   return `<li class="trip-events__item">
     <div class="event">
       <time class="event__date" datetime="${humanizeDate(
-        dateFrom
-      )}">${humanizeTopicDate(dateFrom)}</time>
+    dateFrom
+  )}">${humanizeTopicDate(dateFrom)}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
@@ -58,12 +58,12 @@ const createTemplate = (point) => {
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${humanizeDate(
-            dateFrom
-          )}T${humanizeMinutes(dateFrom)}">${humanizeMinutes(dateFrom)}</time>
+    dateFrom
+  )}T${humanizeMinutes(dateFrom)}">${humanizeMinutes(dateFrom)}</time>
           &mdash;
           <time class="event__end-time" datetime="${humanizeDate(
-            dateTo
-          )}T${humanizeMinutes(dateTo)}">${humanizeMinutes(dateTo)}</time>
+    dateTo
+  )}T${humanizeMinutes(dateTo)}">${humanizeMinutes(dateTo)}</time>
         </p>
       </div>
       <p class="event__price">
@@ -104,8 +104,8 @@ export default class PointView extends AbstractView {
       allOffers: this.#getOffersByPointType(point.type),
     };
     this.element
-      .querySelector(".event__rollup-btn")
-      .addEventListener("click", this.#expandButtonClickHandler);
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#expandButtonClickHandler);
   }
 
   get template() {

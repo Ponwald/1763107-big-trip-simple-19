@@ -1,12 +1,12 @@
-import { remove, render, replace } from "../../framework/render.js";
-import PointEditView from "../view/point-edit-view.js";
-import PointView from "../view/point-view.js";
-import { UserAction, UpdateType } from "../const.js";
-import { isDateEqual } from "../utils/point.js";
+import { remove, render, replace } from '../../framework/render.js';
+import PointEditView from '../view/point-edit-view.js';
+import PointView from '../view/point-view.js';
+import { UserAction, UpdateType } from '../const.js';
+import { isDateEqual } from '../utils/point.js';
 
 const Mode = {
-  DEFAULT: "DEFAULT",
-  EDITING: "EDITING",
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
 };
 
 export default class PointPresenter {
@@ -126,14 +126,14 @@ export default class PointPresenter {
     replace(this.#newEditPointComponent, this.#newPointComponent);
     this.#mode = Mode.EDITING;
 
-    document.addEventListener("keydown", this.#escKeydownHandler);
+    document.addEventListener('keydown', this.#escKeydownHandler);
   }
 
   #replaceFormToPoint() {
     replace(this.#newPointComponent, this.#newEditPointComponent);
     this.#mode = Mode.DEFAULT;
 
-    document.removeEventListener("keydown", this.#escKeydownHandler);
+    document.removeEventListener('keydown', this.#escKeydownHandler);
   }
 
   #resetEditFormView() {
@@ -166,7 +166,7 @@ export default class PointPresenter {
   };
 
   #escKeydownHandler = (evt) => {
-    if (evt.key === "Escape" || evt.key === "Esc") {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.#handleCloseForm();
     }

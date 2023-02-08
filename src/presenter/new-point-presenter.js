@@ -1,6 +1,6 @@
-import { UpdateType, UserAction } from "../const.js";
-import { remove, render, RenderPosition } from "../../framework/render.js";
-import PointEditView from "../view/point-edit-view.js";
+import { UpdateType, UserAction } from '../const.js';
+import { remove, render, RenderPosition } from '../../framework/render.js';
+import PointEditView from '../view/point-edit-view.js';
 
 export default class NewPointPresenter {
   #boardContainer = null;
@@ -38,11 +38,11 @@ export default class NewPointPresenter {
 
     render(
       this.#pointEditComponent,
-      this.#boardContainer.querySelector(".trip-events__list"),
+      this.#boardContainer.querySelector('.trip-events__list'),
       RenderPosition.AFTERBEGIN
     );
 
-    document.addEventListener("keydown", this.#escKeyDownHandler);
+    document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
   destroy() {
@@ -55,7 +55,7 @@ export default class NewPointPresenter {
     remove(this.#pointEditComponent);
     this.#pointEditComponent = null;
 
-    document.removeEventListener("keydown", this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   setSaving() {
@@ -88,7 +88,7 @@ export default class NewPointPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === "Escape" || evt.key === "Esc") {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.destroy();
     }

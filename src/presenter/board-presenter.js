@@ -1,18 +1,18 @@
-import TripEventsListView from "../view/trip-events-list-view.js";
-import ListEmptyView from "../view/list-empty-view.js";
-import SortView from "../view/sort-view.js";
-import PointPresenter from "./point-presenter.js";
-import NewPointPresenter from "./new-point-presenter.js";
-import UiBlocker from "../../framework/ui-blocker/ui-blocker.js";
-import { filter } from "../utils/filter.js";
-import LoadingView from "../view/loading-view.js";
-import { RenderPosition, render, remove } from "../../framework/render.js";
-import { SortType, UpdateType, UserAction, FilterType } from "../const.js";
+import TripEventsListView from '../view/trip-events-list-view.js';
+import ListEmptyView from '../view/list-empty-view.js';
+import SortView from '../view/sort-view.js';
+import PointPresenter from './point-presenter.js';
+import NewPointPresenter from './new-point-presenter.js';
+import UiBlocker from '../../framework/ui-blocker/ui-blocker.js';
+import { filter } from '../utils/filter.js';
+import LoadingView from '../view/loading-view.js';
+import { RenderPosition, render, remove } from '../../framework/render.js';
+import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import {
   sortByDay,
   sortByPrice,
   getOffersByPointType,
-} from "../utils/point.js";
+} from '../utils/point.js';
 
 const TimeLimit = {
   LOWER: 350,
@@ -159,6 +159,7 @@ export default class BoardPresenter {
 
   #getOffersByPointType = (pointType) =>
     getOffersByPointType(pointType, this.offers);
+
   #handleViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
     switch (actionType) {
